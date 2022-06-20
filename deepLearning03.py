@@ -1,25 +1,85 @@
+import pathlib
+
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow import keras
 from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
-### Partie A - Création des données
-from keras.datasets import mnist
-from keras.utils import to_categorical
-(X_train_data,Y_train_data),(X_test_data,Y_test_data) = mnist.load_data()
-N = X_train_data.shape[0] # 60 000 données
-
-X_train = np.reshape(X_train_data, (N,28,28,1))
-X_test = np.reshape(X_test_data, (X_test_data.shape[0],28,28,1))
-X_train = X_train/255 # normalisation
-X_test = X_test/255
-Y_train = to_categorical(Y_train_data, num_classes=10)
-Y_test = to_categorical(Y_test_data, num_classes=10)
 
 
 modele02 = keras.models.load_model('modele_Save')
+print(modele02.summary())
 
-score = modele02.evaluate(X_test, Y_test, verbose=0)
-print('Test loss:', score[0])
-print('Test accuracy:', score[1])
+import PIL
+from PIL import Image
+
+#fonction return result of the model
+def res(x):
+    tab = np.array(x)
+    maxi = np.max(tab)
+    _,index = np.where(tab == maxi)
+    return (int(index), maxi)
+
+    #generalisation
+
+#transform stock images into exploitable input for the model
+def transformation_input(image, shape):
+
+    image_grey = image.convert("L")
+    image_grey_array = np.array(image_grey) / 255
+    image_grey_array_reshape = np.reshape(image_grey_array, shape)
+    return image_grey_array_reshape
+
+##variables
+path_directory = "directory"
+num = []
+shape = (1, 28, 28, 1)
+images = []
+res_model = []
+verif = []
+
+# stock images from path_directory
+for path in pathlib.Path(path_directory).iterdir():
+    if path.is_file():
+        images.append(PIL.Image.open(path))
+        num.append(str(path)[len(path_directory + "\\")])
+image_transformation_input = np.array([transformation_input(_, shape) for _ in images])
+
+
+
+for i in image_transformation_input:
+    res_model.append(modele02(i, training="false"))
+
+score = np.array( [res(_) for _ in res_model] )
+for i in range(len(score)):
+    if int(num[i]) == int(score[i][0]):
+        verif.append("OK")
+    else:
+        verif.append("NOP")
+
+
+def output(num, score):
+    first_ligne = ["Predicted number", " Probability"]
+    ligne = len(str(num[0])) + 3*len(3*"    ") + len(str(score[0][0]))  + len(str(score[0][1])) + len("NOP")
+    print("=" * ligne)
+    print("Results")
+    print("-" * ligne)
+    print(1*"\t", end="")
+    for i in first_ligne:
+        print(i, end="\t")
+    print("\n" + "-"*ligne)
+
+    k=0
+    for i in score:
+        print(num[k], end=3*"\t")
+        print(int(i[0]), 3*"\t", i[1], 3*"\t", verif[k])
+        k = k + 1
+    print("-" * ligne)
+    print("Corrects :", verif.count("OK")/len(verif))
+    print("False :", verif.count("NOP")/len(verif))
+    print("=" * ligne)
+
+output(num, score)
+
+

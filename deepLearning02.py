@@ -19,8 +19,7 @@ Y_test = to_categorical(Y_test_data, num_classes=10)
 ### Partie B - Réseau de neurones
 modele = Sequential()
 # Première couche de convolution : 32 neurones, motif 3x3, activ. relu
-modele.add(Conv2D(32, kernel_size=3, padding='same', activation='relu',
-input_shape=(28,28,1)))
+modele.add(Conv2D(32, kernel_size=3, padding='same', activation='relu',input_shape=(28,28,1)))
 # Deuxième couche de convolution : 16 neurones
 modele.add(Conv2D(16, kernel_size=3, padding='same', activation='relu'))
 # Aplatissage
@@ -28,12 +27,10 @@ modele.add(Flatten())
 # Couche de sortie : 1O neurones
 modele.add(Dense(10, activation='softmax'))
 # Descente de gradient
-modele.compile(loss='categorical_crossentropy',
-optimizer='adam',
-metrics=['accuracy'])
+modele.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
 print(modele.summary())
 # Calcul des poids
-modele.fit(X_train, Y_train, batch_size=32, epochs=4)
+modele.fit(X_train, Y_train, batch_size=32, epochs=5)
 ### Partie C - Résultats
 score = modele.evaluate(X_test, Y_test, verbose=0)
 print('Test loss:', score[0])
