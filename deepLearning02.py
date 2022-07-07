@@ -4,7 +4,8 @@ from tensorflow import keras
 from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
-### Partie A - Création des données
+
+    ### Partie A - Création des données
 from keras.datasets import mnist
 from keras.utils import to_categorical
 (X_train_data,Y_train_data),(X_test_data,Y_test_data) = mnist.load_data()
@@ -16,7 +17,8 @@ X_train = X_train/255 # normalisation
 X_test = X_test/255
 Y_train = to_categorical(Y_train_data, num_classes=10)
 Y_test = to_categorical(Y_test_data, num_classes=10)
-### Partie B - Réseau de neurones
+
+    ### Partie B - Réseau de neurones
 modele = Sequential()
 # Première couche de convolution : 32 neurones, motif 3x3, activ. relu
 modele.add(Conv2D(32, kernel_size=3, padding='same', activation='relu',input_shape=(28,28,1)))
@@ -31,7 +33,8 @@ modele.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accura
 print(modele.summary())
 # Calcul des poids
 modele.fit(X_train, Y_train, batch_size=32, epochs=5)
-### Partie C - Résultats
+
+    ### Partie C - Résultats
 score = modele.evaluate(X_test, Y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])

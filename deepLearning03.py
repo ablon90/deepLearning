@@ -28,13 +28,13 @@ def transformation_input(image, shape):
 
     image_grey = image.convert("L")
     image_grey_array = np.array(image_grey) / 255
-    image_grey_array_reshape = np.reshape(image_grey_array, shape)
+    image_grey_array_reshape = image_grey_array.reshape(shape)
     return image_grey_array_reshape
 
 ##variables
 path_directory = "directory"
 num = []
-shape = (1, 28, 28, 1)
+shape = (-1, 28, 28, 1)
 images = []
 res_model = []
 verif = []
