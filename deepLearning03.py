@@ -31,11 +31,14 @@ def transformation_input(image, shape):
     image_grey_array_reshape = image_grey_array.reshape(shape)
     return image_grey_array_reshape
 
-##variables
+#========================
+#       variables
+#======================
 path_directory = "directory"
 num = []
 shape = (-1, 28, 28, 1)
 images = []
+    #results of the model
 res_model = []
 verif = []
 
@@ -59,6 +62,7 @@ for i in range(len(score)):
         verif.append("NOP")
 
 
+# function that display the results
 def output(num, score):
     first_ligne = ["Predicted number", " Probability"]
     ligne = len(str(num[0])) + 3*len(3*"    ") + len(str(score[0][0]))  + len(str(score[0][1])) + len("NOP")
